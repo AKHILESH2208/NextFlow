@@ -7,27 +7,52 @@ ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
 export const cropImageTask = task({
   id: "crop-image",
-  run: async (payload: { imageUrl: string, x?: number, y?: number, width?: number, height?: number }) => {
-    return new Promise((resolve, reject) => {
+  run: async (payload: { imageUrl: string, x?: number | string, y?: number | string, width?: number | string, height?: number | string }) => {
+    try {
+      const inputPath = `/tmp/input-${Date.now()}.jpg`;
       const outputPath = `/tmp/cropped-${Date.now()}.jpg`;
+
+      console.log(`Downloading image from ${payload.imageUrl}`);
+      // 1. Download the image first to avoid ffmpeg network issues
+      const response = await fetch(payload.imageUrl);
+      if (!response.ok) throw new Error(`Failed to fetch image: ${response.statusText}`);
       
-      const cmd = ffmpeg(payload.imageUrl)
-        .videoFilters(`crop=iw*${payload.width ?? 100}/100:ih*${payload.height ?? 100}/100:iw*${payload.x ?? 0}/100:ih*${payload.y ?? 0}/100`)
-        .output(outputPath)
-        .on('end', () => {
-           try {
-             const base64 = fs.readFileSync(outputPath, 'base64');
-             const dataUrl = `data:image/jpeg;base64,${base64}`;
-             fs.unlinkSync(outputPath);
-             resolve({ url: dataUrl, status: "cropped via FFmpeg", path: outputPath });
-           } catch(e) {
-             resolve({ url: payload.imageUrl, error: "Failed to read file" });
-           }
-        })
-        .on('error', (err) => resolve({ url: payload.imageUrl, error: err.message }));
+      const arrayBuffer = await response.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      fs.writeFileSync(inputPath, buffer);
       
-      cmd.run();
-    });
+      console.log(`Saved input to ${inputPath} (${buffer.length} bytes)`);
+
+      // 2. Crop with ffmpeg
+      console.log(`Original crop variables: w=${payload.width}, h=${payload.height}, x=${payload.x}, y=${payload.y}`);
+      
+      await new Promise((resolve, reject) => {
+        ffmpeg(inputPath)
+          .videoFilters(`crop=iw*${payload.width ?? 100}/100:ih*${payload.height ?? 100}/100:iw*${payload.x ?? 0}/100:ih*${payload.y ?? 0}/100`)
+          .frames(1)
+          .output(outputPath)
+          .on('end', () => resolve(true))
+          .on('error', (err) => reject(new Error(`FFmpeg crop failed: ${err.message}`)))
+          .run();
+      });
+
+      // 3. Convert to base64
+      const base64 = fs.readFileSync(outputPath, 'base64');
+      const dataUrl = `data:image/jpeg;base64,${base64}`;
+      
+      // Cleanup
+      try { 
+        fs.unlinkSync(inputPath); 
+        fs.unlinkSync(outputPath); 
+      } catch(e) {}
+      
+      console.log('Successfully generated base64 result');
+      return { url: dataUrl, status: "cropped via FFmpeg", path: outputPath };
+    } catch (e: any) {
+      // If error occurs, we still want to log it but fallback gracefully if needed
+      console.error("Crop task error:", e);
+      return { url: payload.imageUrl, error: e.message || "Failed to crop" };
+    }
   }
 });
 
