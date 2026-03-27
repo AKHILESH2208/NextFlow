@@ -1,9 +1,7 @@
 import { task } from "@trigger.dev/sdk/v3";
 import ffmpeg from "fluent-ffmpeg";
-import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
 import fs from "fs";
 
-ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
 export const cropImageTask = task({
   id: "crop-image",
