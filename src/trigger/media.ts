@@ -1,6 +1,7 @@
 import { task } from "@trigger.dev/sdk/v3";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
+import fs from "fs";
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
@@ -13,9 +14,18 @@ export const cropImageTask = task({
       const cmd = ffmpeg(payload.imageUrl)
         .videoFilters(`crop=${payload.width || 100}:${payload.height || 100}:${payload.x || 0}:${payload.y || 0}`)
         .output(outputPath)
-        .on('end', () => resolve({ url: payload.imageUrl, status: "cropped via FFmpeg", path: outputPath }))
-        .on('error', (err) => resolve({ url: payload.imageUrl, error: err.message })); 
-
+        .on('end', () => {
+           try {
+             const base64 = fs.readFileSync(outputPath, 'base64');
+             const dataUrl = `data:image/jpeg;base64,${base64}`;
+             fs.unlinkSync(outputPath);
+             resolve({ url: dataUrl, status: "cropped via FFmpeg", path: outputPath });
+           } catch(e) {
+             resolve({ url: payload.imageUrl, error: "Failed to read file" });
+           }
+        })
+        .on('error', (err) => resolve({ url: payload.imageUrl, error: err.message }));
+      
       cmd.run();
     });
   }
@@ -32,9 +42,18 @@ export const extractFrameTask = task({
         .seekInput(time)
         .frames(1)
         .output(outputPath)
-        .on('end', () => resolve({ url: "https://via.placeholder.com/800x600?text=FFmpeg+Extracted+Frame", status: "extracted via FFmpeg", path: outputPath }))
+        .on('end', () => {
+           try {
+             const base64 = fs.readFileSync(outputPath, 'base64');
+             const dataUrl = `data:image/jpeg;base64,${base64}`;
+             fs.unlinkSync(outputPath);
+             resolve({ url: dataUrl, status: "extracted via FFmpeg", path: outputPath });
+           } catch(e) {
+             resolve({ url: "https://via.placeholder.com/800x600?text=FFmpeg+Mock+Frame", error: "Failed to read file" });
+           }
+        })
         .on('error', (err) => resolve({ url: "https://via.placeholder.com/800x600?text=FFmpeg+Mock+Frame", error: err.message }));
-
+      
       cmd.run();
     });
   }
