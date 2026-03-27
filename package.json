@@ -13,6 +13,7 @@
     "@clerk/nextjs": "^7.0.6",
     "@google/generative-ai": "^0.24.1",
     "@radix-ui/react-slot": "^1.2.4",
+    "@trigger.dev/build": "^4.4.3",
     "@trigger.dev/sdk": "^4.4.3",
     "@uploadcare/nextjs-loader": "^1.0.0",
     "@uploadcare/react-widget": "^3.0.0",

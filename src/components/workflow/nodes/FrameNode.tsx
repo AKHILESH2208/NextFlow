@@ -1,6 +1,6 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import { Handle, Position } from '@xyflow/react';
-import { ScissorsIcon, X, Play } from 'lucide-react';
+import { ScissorsIcon, X, Play, ChevronDown, ChevronRight } from 'lucide-react';
 import { useWorkflowStore } from '@/store/workflowStore';
 import { useWorkflowExecution } from '@/hooks/useWorkflowExecution';
 
@@ -9,12 +9,13 @@ function FrameNode({ id, data }: { id: string; data: any }) {
   const updateNodeData = useWorkflowStore((state) => state.updateNodeData);
   const edges = useWorkflowStore((state) => state.edges);
   const { executeSingleNode } = useWorkflowExecution();
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
 // Remove unused hasVideoConnection variable
   const hasTimestampConnection = edges.some(e => e.target === id && e.targetHandle === "timestamp");
 
   return (
-    <div className={`w-56 bg-[#0f0f0f] text-white border rounded-xl shadow-[0_0_30px_rgba(0,0,0,1)] p-0 font-sans transition-all duration-300 ${data.isGenerating ? "border-purple-500 ring-2 ring-purple-500/50 shadow-[0_0_30px_rgba(168,85,247,0.4)]" : "border-white/10 hover:border-white/20"}`}>
+    <div className={`w-56 bg-[#0f0f0f] text-white border rounded-xl shadow-[0_0_30px_rgba(0,0,0,1)] p-0 font-sans transition-all duration-300 ${data.isGenerating ? "border-purple-500 ring-2 ring-purple-500/50 shadow-[0_0_30px_rgba(168,85,247,0.4)] animate-pulse" : "border-white/10 hover:border-white/20"}`}>
       <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-gradient-to-b from-white/[0.04] to-transparent">
         <div className="flex items-center gap-2">
           <ScissorsIcon size={14} className="text-white/40" />
@@ -53,13 +54,18 @@ function FrameNode({ id, data }: { id: string; data: any }) {
         </button>
         {data.output && (
           <div className="mt-2 flex flex-col gap-1 nodrag cursor-default">
-            <span className="text-[10px] text-white/50 uppercase tracking-wider">Output</span>
+            <div className="flex items-center justify-between cursor-pointer group" onClick={() => setIsCollapsed(!isCollapsed)}>
+              <span className="text-[10px] text-white/50 uppercase tracking-wider group-hover:text-white/80 transition-colors">Output</span>
+              {isCollapsed ? <ChevronRight size={12} className="text-white/50" /> : <ChevronDown size={12} className="text-white/50" />}
+            </div>
+            {!isCollapsed && (
             <div className="relative w-full aspect-square bg-[#111] rounded-lg overflow-hidden border border-white/10 group/output">
               <img src={data.output} alt="Extracted Frame" className="w-full h-full object-contain" />
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/output:opacity-100 flex items-center justify-center transition-opacity">
                 <a href={data.output} download="frame_result.jpg" className="text-[10px] bg-white/20 hover:bg-white/40 text-white px-3 py-1.5 rounded-full backdrop-blur-md shadow-lg">Download Image</a>
               </div>
             </div>
+            )}
           </div>
         )}
       </div>
