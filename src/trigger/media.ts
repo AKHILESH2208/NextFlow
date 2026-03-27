@@ -12,7 +12,7 @@ export const cropImageTask = task({
       const outputPath = `/tmp/cropped-${Date.now()}.jpg`;
       
       const cmd = ffmpeg(payload.imageUrl)
-        .videoFilters(`crop=${payload.width || 100}:${payload.height || 100}:${payload.x || 0}:${payload.y || 0}`)
+        .videoFilters(`crop=iw*${payload.width ?? 100}/100:ih*${payload.height ?? 100}/100:iw*${payload.x ?? 0}/100:ih*${payload.y ?? 0}/100`)
         .output(outputPath)
         .on('end', () => {
            try {

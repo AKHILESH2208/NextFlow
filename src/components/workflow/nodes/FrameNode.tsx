@@ -57,7 +57,7 @@ function FrameNode({ id, data }: { id: string; data: any }) {
             <div className="relative w-full aspect-square bg-[#111] rounded-lg overflow-hidden border border-white/10 group/output">
               <img src={data.output} alt="Extracted Frame" className="w-full h-full object-contain" />
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/output:opacity-100 flex items-center justify-center transition-opacity">
-                <a href={data.output} target="_blank" rel="noopener noreferrer" className="text-[10px] bg-white/20 hover:bg-white/40 text-white px-3 py-1.5 rounded-full backdrop-blur-md">Open Image</a>
+                <a href={data.output} download="frame_result.jpg" className="text-[10px] bg-white/20 hover:bg-white/40 text-white px-3 py-1.5 rounded-full backdrop-blur-md shadow-lg">Download Image</a>
               </div>
             </div>
           </div>
