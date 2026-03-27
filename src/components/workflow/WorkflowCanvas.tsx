@@ -120,7 +120,7 @@ function Flow() {
           maskColor="#111"
           style={{ backgroundColor: '#0a0a0a', border: '1px solid #232323' }}
         />
-        <Background variant={BackgroundVariant.Dots} gap={32} size={1} color="rgba(255,255,255,0.06)" />
+        <Background variant={BackgroundVariant.Dots} gap={32} size={1} color="rgba(255,255,255,0.25)" />
       </ReactFlow>
     </div>
   );

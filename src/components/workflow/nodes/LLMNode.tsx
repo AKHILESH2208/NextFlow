@@ -19,7 +19,7 @@ function LLMNode({ id, data }: { id: string; data: any }) {
   };
 
   return (
-    <div className={`w-80 bg-black/60 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.8)] p-0 font-sans group hover:border-white/20 transition-all duration-300 ${data.isGenerating ? "border-purple-500/50 shadow-[0_0_30px_rgba(168,85,247,0.4)] animate-pulse" : ""}`}>
+    <div className={`w-80 bg-black/60 backdrop-blur-2xl border rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.8)] p-0 font-sans group transition-all duration-300 ${data.isGenerating ? "border-purple-500 ring-2 ring-purple-500/50 shadow-[0_0_30px_rgba(168,85,247,0.4)]" : "border-white/10 hover:border-white/20"}`}>
       <div className="absolute inset-0 bg-krea-accent opacity-5 pointer-events-none" />
       <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-gradient-to-b from-white/[0.04] to-transparent">
         <div className="flex items-center gap-2">
@@ -45,7 +45,7 @@ function LLMNode({ id, data }: { id: string; data: any }) {
         </div>
 
         <div className="relative">
-          <Handle type="target" id="system_prompt" position={Position.Left} style={{ left: "-8px" }} style={{ left: "-8px" }} className="w-3! h-3! border-0! bg-white! shadow-[0_0_12px_rgba(255,255,255,0.9)]! ring-2! ring-black/50!" />
+          <Handle type="target" id="system_prompt" position={Position.Left} style={{ left: "-8px" }} className="w-3! h-3! border-0! bg-white! shadow-[0_0_12px_rgba(255,255,255,0.9)]! ring-2! ring-black/50!" />
           <div className="text-[10px] text-krea-text-muted uppercase mb-1 ml-2">System Prompt</div>
           <textarea 
             className={`nodrag w-full bg-black/40 border border-white/5 rounded-lg p-3 text-xs text-white/90 outline-none focus:border-white/20 focus:ring-1 focus:ring-white/10 transition-all resize-none min-h-[60px] shadow-inner ${hasSystemPromptConnection ? 'opacity-50 cursor-not-allowed' : 'focus:border-krea-accent'}`}
@@ -57,7 +57,7 @@ function LLMNode({ id, data }: { id: string; data: any }) {
         </div>
 
         <div className="relative">
-          <Handle type="target" id="user_message" position={Position.Left} style={{ left: "-8px" }} style={{ left: "-8px" }} className="w-3! h-3! border-0! bg-white! shadow-[0_0_12px_rgba(255,255,255,0.9)]! ring-2! ring-black/50!" />
+          <Handle type="target" id="user_message" position={Position.Left} style={{ left: "-8px" }} className="w-3! h-3! border-0! bg-white! shadow-[0_0_12px_rgba(255,255,255,0.9)]! ring-2! ring-black/50!" />
           <div className="text-[10px] text-krea-text-muted uppercase mb-1 ml-2">User Message *</div>
           <textarea 
             className={`nodrag w-full bg-black/40 border border-white/5 rounded-lg p-3 text-xs text-white/90 outline-none focus:border-white/20 focus:ring-1 focus:ring-white/10 transition-all resize-none min-h-[60px] shadow-inner ${hasUserMessageConnection ? 'opacity-50 cursor-not-allowed' : 'focus:border-krea-accent'}`}
@@ -69,7 +69,7 @@ function LLMNode({ id, data }: { id: string; data: any }) {
         </div>
 
         <div className="relative flex items-center h-4">
-          <Handle type="target" id="images" position={Position.Left} style={{ left: "-8px" }} style={{ left: "-8px" }} className="w-3! h-3! border-0! bg-white! shadow-[0_0_12px_rgba(255,255,255,0.9)]! ring-2! ring-black/50!" />
+          <Handle type="target" id="images" position={Position.Left} style={{ left: "-8px" }} className="w-3! h-3! border-0! bg-white! shadow-[0_0_12px_rgba(255,255,255,0.9)]! ring-2! ring-black/50!" />
           <div className="text-[10px] text-krea-text-muted uppercase ml-2">Images/Video (Multiple)</div>
         </div>
 
@@ -89,7 +89,7 @@ function LLMNode({ id, data }: { id: string; data: any }) {
 
         <div className="relative flex justify-end items-center h-4 mt-1">
           <div className="text-[10px] text-krea-text-muted uppercase mr-2">Output Result</div>
-          <Handle type="source" id="output" position={Position.Right} style={{ right: "-8px" }} style={{ right: "-8px" }} className="w-3! h-3! border-0! bg-white! shadow-[0_0_12px_rgba(255,255,255,0.9)]! ring-2! ring-black/50!" />
+          <Handle type="source" id="output" position={Position.Right} style={{ right: "-8px" }} className="w-3! h-3! border-0! bg-white! shadow-[0_0_12px_rgba(255,255,255,0.9)]! ring-2! ring-black/50!" />
         </div>
 
       </div>

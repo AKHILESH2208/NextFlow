@@ -35,7 +35,7 @@ function TextNode({ id, data }: { id: string; data: any }) {
           <Play size={10} className="fill-current" /> Run Node
         </button>
       </div>
-      <Handle type="source" position={Position.Right} id="text_out" style={{ right: "-8px" }} style={{ right: "-8px" }} className="w-3! h-3! border-0! bg-white! shadow-[0_0_12px_rgba(255,255,255,0.8)]! ring-2! ring-black/50!" />
+      <Handle type="source" position={Position.Right} id="text_out" style={{ right: "-8px" }} className="w-3! h-3! border-0! bg-white! shadow-[0_0_12px_rgba(255,255,255,0.8)]! ring-2! ring-black/50!" />
     </div>
   );
 }
