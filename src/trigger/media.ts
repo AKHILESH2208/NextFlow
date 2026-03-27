@@ -55,29 +55,21 @@ export const cropImageTask = task({
 });
 
 export const extractFrameTask = task({
-  id: "extract-frame",
+  id: 'extract-frame',
   run: async (payload: { videoUrl: string, timestamp?: string }) => {
-    return new Promise((resolve, reject) => {
-      const outputPath = `/tmp/frame-${Date.now()}.jpg`;
+    try {
+      const input = '/tmp/vid-' + Date.now() + '.mp4';
+      const output = '/tmp/img-' + Date.now() + '.jpg';
+      const res = await fetch(payload.videoUrl);
+      const buf = Buffer.from(await res.arrayBuffer());
+      fs.writeFileSync(input, buf);
       const time = payload.timestamp?.includes('%') ? '00:00:01' : (payload.timestamp || '00:00:01');
-      
-      const cmd = ffmpeg(payload.videoUrl)
-        .seekInput(time)
-        .frames(1)
-        .output(outputPath)
-        .on('end', () => {
-           try {
-             const base64 = fs.readFileSync(outputPath, 'base64');
-             const dataUrl = `data:image/jpeg;base64,${base64}`;
-             fs.unlinkSync(outputPath);
-             resolve({ url: dataUrl, status: "extracted via FFmpeg", path: outputPath });
-           } catch(e) {
-             resolve({ url: "https://via.placeholder.com/800x600?text=FFmpeg+Mock+Frame", error: "Failed to read file" });
-           }
-        })
-        .on('error', (err) => resolve({ url: "https://via.placeholder.com/800x600?text=FFmpeg+Mock+Frame", error: err.message }));
-      
-      cmd.run();
-    });
+      await new Promise((resolve, reject) => { ffmpeg(input).seekInput(time).frames(1).output(output).on('end', () => resolve(true)).on('error', (err) => reject(new Error(err.message))).run(); });
+      const b64 = fs.readFileSync(output, 'base64');
+      try { fs.unlinkSync(input); fs.unlinkSync(output); } catch(e){}
+      return { url: 'data:image/jpeg;base64,' + b64, status: 'extracted', path: output };
+    } catch (e: any) {
+      return { url: 'https://via.placeholder.com/800x600', error: e.message };
+    }
   }
 });
