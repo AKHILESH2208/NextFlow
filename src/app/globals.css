@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@theme {
+  --color-krea-bg: #0a0a0a;
+  --color-krea-panel: #141414;
+  --color-krea-border: #262626;
+  --color-krea-border-hover: #333333;
+  --color-krea-text: #ededed;
+  --color-krea-text-muted: #a1a1aa;
+  --color-krea-accent: #8b5cf6;
+  --color-krea-accent-hover: #a78bfa;
+}
+
+html, body {
+  background-color: var(--color-krea-bg);
+  color: var(--color-krea-text);
+  margin: 0;
+  padding: 0;
+  
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-krea-border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-krea-border-hover);
+}
+
+.react-flow {
+  --xy-node-border-radius: 12px;
+  --xy-edge-stroke-default: var(--color-krea-border-hover);
+  --xy-handle-background-color: var(--color-krea-panel);
+  --xy-handle-border-color: var(--color-krea-text-muted);
+  --xy-controls-button-background-color: var(--color-krea-panel);
+  --xy-controls-button-background-color-hover: var(--color-krea-border);
+  --xy-controls-button-color: var(--color-krea-text);
+  --xy-controls-button-color-hover: var(--color-krea-text);
+  --xy-controls-button-border-color: var(--color-krea-border);
+}

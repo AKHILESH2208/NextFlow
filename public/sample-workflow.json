@@ -1,0 +1,183 @@
+{
+  "nodes": [
+    {
+      "id": "node-upload-image-1",
+      "type": "imageNode",
+      "position": {
+        "x": 100,
+        "y": 100
+      },
+      "data": {
+        "label": "Upload Image Node"
+      }
+    },
+    {
+      "id": "node-crop-image-1",
+      "type": "cropNode",
+      "position": {
+        "x": 400,
+        "y": 100
+      },
+      "data": {
+        "label": "Crop Image Node",
+        "width": 80,
+        "height": 80
+      }
+    },
+    {
+      "id": "node-text-sys-1",
+      "type": "textNode",
+      "position": {
+        "x": 400,
+        "y": 300
+      },
+      "data": {
+        "label": "Text Node #1 (System Prompt)",
+        "text": "You are a professional marketing copywriter. Generate a compelling one-paragraph product description."
+      }
+    },
+    {
+      "id": "node-text-msg-1",
+      "type": "textNode",
+      "position": {
+        "x": 400,
+        "y": 500
+      },
+      "data": {
+        "label": "Text Node #2 (Product Details)",
+        "text": "Product: Macbook Neo. Features: M4 Ultra Chip, 36-hour battery, zero-fan cooling design, Liquid Retina XDR."
+      }
+    },
+    {
+      "id": "node-llm-1",
+      "type": "llmNode",
+      "position": {
+        "x": 800,
+        "y": 300
+      },
+      "data": {
+        "label": "LLM Node #1"
+      }
+    },
+    {
+      "id": "node-upload-video-1",
+      "type": "videoNode",
+      "position": {
+        "x": 100,
+        "y": 800
+      },
+      "data": {
+        "label": "Upload Video Node"
+      }
+    },
+    {
+      "id": "node-extract-frame-1",
+      "type": "frameNode",
+      "position": {
+        "x": 400,
+        "y": 800
+      },
+      "data": {
+        "label": "Extract Frame Node",
+        "timestamp": "50%"
+      }
+    },
+    {
+      "id": "node-text-sys-2",
+      "type": "textNode",
+      "position": {
+        "x": 800,
+        "y": 600
+      },
+      "data": {
+        "label": "Text Node #3 (System Prompt 2)",
+        "text": "You are a social media manager. Create a tweet-length release announcement tweet for the premium Macbook Neo based on the detailed product draft and the image and extracted frame."
+      }
+    },
+    {
+      "id": "node-llm-2",
+      "type": "llmNode",
+      "position": {
+        "x": 1200,
+        "y": 500
+      },
+      "data": {
+        "label": "LLM Node #2 (Convergence)"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-img1-crop1",
+      "source": "node-upload-image-1",
+      "target": "node-crop-image-1",
+      "sourceHandle": "image_out",
+      "targetHandle": "image_url",
+      "animated": true
+    },
+    {
+      "id": "edge-crop1-llm1",
+      "source": "node-crop-image-1",
+      "target": "node-llm-1",
+      "sourceHandle": "output",
+      "targetHandle": "images",
+      "animated": true
+    },
+    {
+      "id": "edge-text1-llm1",
+      "source": "node-text-sys-1",
+      "target": "node-llm-1",
+      "sourceHandle": "text_out",
+      "targetHandle": "system_prompt",
+      "animated": true
+    },
+    {
+      "id": "edge-text2-llm1",
+      "source": "node-text-msg-1",
+      "target": "node-llm-1",
+      "sourceHandle": "text_out",
+      "targetHandle": "user_message",
+      "animated": true
+    },
+    {
+      "id": "edge-vid1-frame1",
+      "source": "node-upload-video-1",
+      "target": "node-extract-frame-1",
+      "sourceHandle": "video_out",
+      "targetHandle": "video_url",
+      "animated": true
+    },
+    {
+      "id": "edge-llm1-llm2",
+      "source": "node-llm-1",
+      "target": "node-llm-2",
+      "sourceHandle": "output",
+      "targetHandle": "user_message",
+      "animated": true
+    },
+    {
+      "id": "edge-text3-llm2",
+      "source": "node-text-sys-2",
+      "target": "node-llm-2",
+      "sourceHandle": "text_out",
+      "targetHandle": "system_prompt",
+      "animated": true
+    },
+    {
+      "id": "edge-crop1-llm2",
+      "source": "node-crop-image-1",
+      "target": "node-llm-2",
+      "sourceHandle": "output",
+      "targetHandle": "images",
+      "animated": true
+    },
+    {
+      "id": "edge-frame1-llm2",
+      "source": "node-extract-frame-1",
+      "target": "node-llm-2",
+      "sourceHandle": "output",
+      "targetHandle": "images",
+      "animated": true
+    }
+  ]
+}
