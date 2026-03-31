@@ -79,6 +79,8 @@ export default function CanvasPage() {
   };
 
   useEffect(() => {
+    if (isSampleLoaded) return;
+
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
     
@@ -95,13 +97,11 @@ export default function CanvasPage() {
         })
         .catch(err => console.error("Error loading workflow:", err));
         } else {
-      if (!isSampleLoaded) {
-        setIsSampleLoaded(true);
-        setNodes([]);
-        setEdges([]);
-      }
+      setIsSampleLoaded(true);
+      setNodes([]);
+      setEdges([]);
     }
-  }, [setNodes, setEdges, isSampleLoaded, nodes.length]);
+  }, [setNodes, setEdges, isSampleLoaded]);
 
   const handleSave = async () => {
     try {

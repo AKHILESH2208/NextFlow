@@ -15,22 +15,16 @@ export default function Sidebar() {
 
   return (
     <aside 
-      className={`${isSidebarOpen ? 'w-[240px]' : 'w-[68px]'} flex-col justify-between py-4 border-r border-[#222] bg-[#0A0A0A] hidden md:flex z-50 fixed h-full left-0 top-0 transition-all duration-300 overflow-y-auto no-scrollbar shrink-0`}
+      className={`${isSidebarOpen ? 'w-[240px]' : 'w-[68px]'} flex-col justify-between py-4 pb-8 border-r border-[#222] bg-[#0A0A0A] hidden md:flex z-50 fixed h-full left-0 top-0 transition-all duration-300 overflow-y-auto no-scrollbar shrink-0`}
     >
       <div className="flex flex-col w-full px-3 gap-6">
-          <div className={`flex ${isSidebarOpen ? 'items-center justify-between px-1 h-8 mt-2' : 'flex-col items-center justify-center gap-4 mt-4 w-full'}`}>
-              {isSidebarOpen ? (
-                 <Link href="/" className="flex items-center gap-2">
-                   <Layers className="w-5 h-5 text-white shrink-0" />
-                 </Link>
-              ) : (
-                 <Link href="/" className="mb-1 flex items-center justify-center">
-                   <Layers className="w-5 h-5 text-white shrink-0" />
-                 </Link>
-              )}
+          <div className={`flex ${isSidebarOpen ? 'items-center justify-between px-1 h-8 mt-2' : 'flex-col items-center justify-center gap-6 mt-2 w-full'}`}>
+              <Link href="/" className={`${isSidebarOpen ? 'flex items-center gap-2' : 'flex items-center justify-center'}`}>
+                <Layers className="w-5 h-5 text-white shrink-0" />
+              </Link>
               <button 
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="text-white/50 hover*text-white transition-colors flex items-center justify-center w-8 h-8 rounded-lg hover:bg-white/5"
+                className="text-white/50 hover:text-white transition-colors flex items-center justify-center w-8 h-8 rounded-lg hover:bg-white/5"
               >
                 <PanelLeftClose size={20} className={`${!isSidebarOpen ? "rotate-180" : ""} shrink-0`} />
               </button>
@@ -114,7 +108,7 @@ export default function Sidebar() {
           </div>
       </div>
 
-      <div className={`flex flex-col w-full ${isSidebarOpen ? 'px-4' : 'px-2 items-center'} gap-4 mt-8 pb-4 border-t border-white/5 pt-6`}>
+      <div className={`flex flex-col w-full shrink-0 ${isSidebarOpen ? 'px-4' : 'px-2 items-center'} gap-4 mt-8 pb-4 border-t border-white/5 pt-6`}>
          {isSidebarOpen && (
            <div className="flex flex-col gap-3">
              <span className="text-white/90 text-sm font-medium">Earn 3,000 Credits</span>

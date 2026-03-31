@@ -10,7 +10,7 @@ export const cropImageTask = task({
       const inputPath = `/tmp/input-${Date.now()}.jpg`;
       const outputPath = `/tmp/cropped-${Date.now()}.jpg`;
 
-      console.log(`Downloading image from ${payload.imageUrl}`);
+      console.debug(`Downloading image from ${payload.imageUrl}`);
       // 1. Download the image first to avoid ffmpeg network issues
       const response = await fetch(payload.imageUrl);
       if (!response.ok) throw new Error(`Failed to fetch image: ${response.statusText}`);
@@ -19,10 +19,10 @@ export const cropImageTask = task({
       const buffer = Buffer.from(arrayBuffer);
       fs.writeFileSync(inputPath, buffer);
       
-      console.log(`Saved input to ${inputPath} (${buffer.length} bytes)`);
+      console.debug(`Saved input to ${inputPath} (${buffer.length} bytes)`);
 
       // 2. Crop with ffmpeg
-      console.log(`Original crop variables: w=${payload.width}, h=${payload.height}, x=${payload.x}, y=${payload.y}`);
+      console.debug(`Original crop variables: w=${payload.width}, h=${payload.height}, x=${payload.x}, y=${payload.y}`);
       
       await new Promise((resolve, reject) => {
         ffmpeg(inputPath)
@@ -44,7 +44,7 @@ export const cropImageTask = task({
         fs.unlinkSync(outputPath); 
       } catch(e) {}
       
-      console.log('Successfully generated base64 result');
+      console.debug('Successfully generated base64 result');
       return { url: dataUrl, status: "cropped via FFmpeg", path: outputPath };
     } catch (e: any) {
       // If error occurs, we still want to log it but fallback gracefully if needed
