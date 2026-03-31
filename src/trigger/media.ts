@@ -69,7 +69,8 @@ export const extractFrameTask = task({
       try { fs.unlinkSync(input); fs.unlinkSync(output); } catch(e){}
       return { url: 'data:image/jpeg;base64,' + b64, status: 'extracted', path: output };
     } catch (e: any) {
-      return { url: 'https://via.placeholder.com/800x600', error: e.message };
+      console.error('Frame extraction failed:', e);
+      return { url: 'https://placehold.co/800x600/png?text=Extraction+Failed:\n' + encodeURIComponent(e.message), error: e.message };
     }
   }
 });

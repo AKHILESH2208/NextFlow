@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Handle, Position } from '@xyflow/react';
-import { ImageIcon, X , Play} from 'lucide-react';
+import { ImageIcon, X , Play, RefreshCw } from 'lucide-react';
 import { useWorkflowStore } from '@/store/workflowStore';
 import { useWorkflowExecution } from '@/hooks/useWorkflowExecution';
 import Uppy from '@uppy/core';
@@ -57,7 +57,16 @@ function ImageNode({ id, data }: { id: string; data: any }) {
       <div className="p-5 flex flex-col gap-4 relative">
         <label className="nodrag border border-dashed border-white/20 hover:border-white/40 bg-black/20 hover:bg-white/5 rounded-lg h-32 flex flex-col items-center justify-center cursor-pointer transition-colors text-krea-text-muted text-[10px] uppercase font-medium tracking-wide relative overflow-hidden">
           {data.url ? (
-            <img src={data.url} alt="Uploaded" className="absolute inset-0 w-full h-full object-cover" />
+            <>
+              <img src={data.url} alt="Uploaded" className="absolute inset-0 w-full h-full object-cover" />
+              <button
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsOpen(true); }}
+                className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white p-1.5 rounded-md backdrop-blur-md transition-colors opacity-0 group-hover:opacity-100"
+                title="Replace Image"
+              >
+                <RefreshCw size={14} />
+              </button>
+            </>
           ) : (
             <>
               <div 

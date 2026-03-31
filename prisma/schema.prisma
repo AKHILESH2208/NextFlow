@@ -13,6 +13,7 @@ model Workflow {
   name      String   @default("Untitled Workflow")
   nodes     Json     // React Flow nodes
   edges     Json     // React Flow edges
+  history   Json?    @default("[]")
   runs      RunHistory[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

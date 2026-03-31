@@ -10,6 +10,9 @@ export function useWorkflowExecution() {
   const updateHistoryEntry = useWorkflowStore(s => s.updateHistoryEntry);
 
   const executeFullWorkflow = async () => {
+    const runId = uuidv4();
+    const runTimestamp = Date.now();
+    const runType = 'Full Workflow';
     const executionResults: Record<string, any> = {};
     const executionPromises: Record<string, Promise<any> | undefined> = {};
     const visiting = new Set<string>();
@@ -49,11 +52,14 @@ export function useWorkflowExecution() {
         const historyId = uuidv4();
         addHistoryEntry({
           id: historyId,
+          runId,
+          runType,
+          runTimestamp,
           nodeId: node.id,
           nodeType: node.type || 'unknown',
           status: 'running',
           timestamp: Date.now()
-        });
+        } as any);
         
         try {
           const result = await executeNode(node, executionResults);
@@ -98,15 +104,15 @@ export function useWorkflowExecution() {
       const edge = incomingEdges.find(e => e.targetHandle === handleId);
       if (edge) {
          const sourceNode = nodes.find(n => n.id === edge.source);
-         if ((sourceNode?.type === 'textNode' || sourceNode?.type === 'text')) return sourceNode.data.text;
-         if ((sourceNode?.type === 'imageNode' || sourceNode?.type === 'upload_image')) return sourceNode.data.url;
-         if ((sourceNode?.type === 'videoNode' || sourceNode?.type === 'upload_video') || sourceNode?.type === 'upload_video') return sourceNode.data.url;
+         if (sourceNode?.type === 'textNode') return sourceNode.data.text;
+         if (sourceNode?.type === 'imageNode') return sourceNode.data.url;
+         if (sourceNode?.type === 'videoNode') return sourceNode.data.url;
          return previousResults[edge.source]?.output || sourceNode?.data?.output;
       }
       return manualValue;
     };
 
-    if ((node.type === 'llmNode' || node.type === 'llm')) {
+    if (node.type === 'llmNode') {
       const system_prompt = getInputValue('system_prompt', node.data.systemPrompt);
       const user_message = getInputValue('user_message', node.data.userMessage);
       
@@ -114,7 +120,7 @@ export function useWorkflowExecution() {
       const images: string[] = [];
       for (const e of imageEdges) {
          const sourceNode = nodes.find(n => n.id === e.source);
-         if (((sourceNode?.type === 'imageNode' || sourceNode?.type === 'upload_image') || sourceNode?.type === 'videoNode') && typeof sourceNode.data.url === 'string') {
+         if ((sourceNode?.type === 'imageNode' || sourceNode?.type === 'videoNode') && typeof sourceNode.data.url === 'string') {
              images.push(sourceNode.data.url);
          }
          else if (typeof previousResults[e.source]?.output === 'string') {
@@ -148,7 +154,7 @@ export function useWorkflowExecution() {
       return { output: finalOutput };
     }
 
-    if ((node.type === 'cropNode' || node.type === 'crop_image')) {
+    if (node.type === 'cropNode') {
        const url = getInputValue('image_url', node.data.image_url);
        const res = await fetch('/api/run-crop', {
          method: 'POST',
@@ -182,7 +188,7 @@ export function useWorkflowExecution() {
        return { output: finalOutput }; 
     }
 
-    if ((node.type === 'frameNode' || node.type === 'extract_frame')) {
+    if (node.type === 'frameNode') {
        const url = getInputValue('video_url', node.data.video_url);
        const res = await fetch('/api/run-frame', {
          method: 'POST',
@@ -213,14 +219,17 @@ export function useWorkflowExecution() {
        return { output: finalOutput }; 
     }
 
-    if ((node.type === 'textNode' || node.type === 'text')) return { output: node.data.text };
-    if ((node.type === 'imageNode' || node.type === 'upload_image')) return { output: node.data.url };
-    if (node.type === 'videoNode' || node.type === 'upload_video') return { output: node.data.url };
+    if (node.type === 'textNode') return { output: node.data.text };
+    if (node.type === 'imageNode') return { output: node.data.url };
+    if (node.type === 'videoNode') return { output: node.data.url };
 
     return {};
   };
 
   const executeSingleNode = async (nodeId: string) => {
+    const runId = uuidv4();
+    const runTimestamp = Date.now();
+    const runType = 'Single Node';
     const executionResults: Record<string, any> = {};
     const executionPromises: Record<string, Promise<any> | undefined> = {};
     const visiting = new Set<string>();
@@ -243,7 +252,7 @@ export function useWorkflowExecution() {
 
         updateNodeData(id, { isGenerating: true });
         const historyId = uuidv4();
-        addHistoryEntry({ id: historyId, nodeId: node.id, nodeType: node.type || 'unknown', status: 'running', timestamp: Date.now() });
+        addHistoryEntry({ id: historyId, runId, runType, runTimestamp, nodeId: node.id, nodeType: node.type || 'unknown', status: 'running', timestamp: Date.now() });
         
         try {
           const result = await executeNode(node, executionResults);

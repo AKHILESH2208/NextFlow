@@ -16,15 +16,22 @@ import { v4 as uuidv4 } from 'uuid';
 
 export type LogEntry = {
   id: string;
+  runId: string;
+  runType: 'Full Workflow' | 'Single Node' | 'Selected Nodes';
+  runTimestamp: number;
   nodeId: string;
   nodeType: string;
   status: 'running' | 'success' | 'error';
   timestamp: number;
   output?: string;
   error?: string;
+  duration?: number;
 };
 
 export type WorkflowState = {
+  workflowId: string | null;
+  setWorkflowId: (id: string | null) => void;
+ 
   nodes: Node[];
   edges: Edge[];
   history: LogEntry[];
@@ -45,6 +52,9 @@ export type WorkflowState = {
 };
 
 export const useWorkflowStore = create<WorkflowState>((set, get) => ({
+  workflowId: null,
+  setWorkflowId: (id) => set({ workflowId: id }),
+ 
   nodes: [],
   edges: [],
   history: [],

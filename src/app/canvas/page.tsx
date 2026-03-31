@@ -33,7 +33,8 @@ export default function CanvasPage() {
   const { executeFullWorkflow } = useWorkflowExecution();
 
   const [isSaving, setIsSaving] = useState(false);
-  const [workflowId, setWorkflowId] = useState<string | null>(null);
+  const workflowId = useWorkflowStore(state => state.workflowId);
+  const setWorkflowId = useWorkflowStore(state => state.setWorkflowId);
 
   // Sidebar states
   const [leftOpen, setLeftOpen] = useState(true);
@@ -156,6 +157,28 @@ export default function CanvasPage() {
     };
     reader.readAsText(file);
   };
+
+  // Group history by runId
+  const groupedHistory = history.reduce((acc, entry) => {
+    if (!entry.runId) return acc;
+    if (!acc[entry.runId]) {
+      acc[entry.runId] = {
+        runId: entry.runId,
+        runType: entry.runType || 'Unknown',
+        runTimestamp: entry.runTimestamp || Date.now(),
+        entries: [],
+        status: 'success',
+        duration: 0
+      };
+    }
+    acc[entry.runId].entries.push(entry);
+    if (entry.status === 'error') acc[entry.runId].status = 'error';
+    if (entry.status === 'running' && acc[entry.runId].status !== 'error') acc[entry.runId].status = 'running';
+    if (entry.duration) acc[entry.runId].duration += entry.duration;
+    return acc;
+  }, {} as Record<string, { runId: string, runType: string, runTimestamp: number, status: string, duration: number, entries: typeof history }>);
+
+  const sortedRuns = Object.values(groupedHistory).sort((a, b) => b.runTimestamp - a.runTimestamp);
 
   return (
     <main className="flex h-screen w-screen bg-black text-white overflow-hidden font-sans relative">
@@ -324,7 +347,7 @@ export default function CanvasPage() {
           onMouseMove={handleMouseMove}
           className={`flex-1 overflow-y-auto p-4 flex flex-col gap-3 min-w-[18rem] min-h-0 ${isDragging ? 'cursor-grabbing select-none' : 'cursor-default gap-3'}`}
         >
-          {history.length === 0 ? (
+          {sortedRuns.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center text-center mt-10">
               <div className="w-12 h-12 rounded-full bg-white/5 border border-white/5 flex items-center justify-center mb-3">
                 <SearchIcon className="text-white/30" size={20} />
@@ -335,44 +358,74 @@ export default function CanvasPage() {
               </p>
             </div>
           ) : (
-            history.map((entry) => (
-              <div 
-                key={entry.id} 
-                className="bg-[#181818] border border-white/5 rounded-xl p-3 text-xs flex flex-col gap-2 relative overflow-hidden shrink-0 shadow-lg"
+            sortedRuns.map((run) => (
+              <details
+                key={run.runId}
+                className="group bg-[#181818] border border-white/5 rounded-xl text-xs flex flex-col relative overflow-hidden shrink-0 shadow-lg"
+                open
               >
-                {entry.status === 'running' && <div className="absolute top-0 left-0 w-full h-[2px] bg-blue-500 animate-pulse" />}
-                {entry.status === 'success' && <div className="absolute top-0 left-0 w-full h-[2px] bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />}
-                {entry.status === 'error' && <div className="absolute top-0 left-0 w-full h-[2px] bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]" />}
-                
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold text-white capitalize">{entry.nodeType.replace('Node', '')} Node</span>
-                  <span className="text-[10px] text-white/40">
-                    {new Date(entry.timestamp).toLocaleTimeString([], { hour12: false, hour: '2-digit', minute:'2-digit', second:'2-digit' })}
-                  </span>
-                </div>
-                
-                <div className="flex items-center gap-2">
-                  <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wide ${
-                    entry.status === 'running' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/30' :
-                    entry.status === 'success' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' :
-                    'bg-red-500/10 text-red-400 border border-red-500/30'
-                  }`}>
-                    {entry.status}
-                  </span>
-                </div>
+                <summary className="flex flex-col gap-2 p-3 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden relative">
+                  {run.status === 'running' && <div className="absolute top-0 left-0 w-full h-0.5 bg-blue-500 animate-pulse" />}
+                  {run.status === 'success' && <div className="absolute top-0 left-0 w-full h-0.5 bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />}
+                  {run.status === 'error' && <div className="absolute top-0 left-0 w-full h-0.5 bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]" />}
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                       <span className="font-semibold text-white capitalize">{run.runType}</span>
+                       <span className="text-[10px] text-white/40 border border-white/10 px-1.5 py-0.5 rounded bg-white/5">
+                         {run.entries.length} node{run.entries.length > 1 ? 's' : ''}
+                       </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] text-white/40">
+                        {new Date(run.runTimestamp).toLocaleTimeString([], { hour12: false, hour: '2-digit', minute:'2-digit', second:'2-digit' })}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wide ${
+                      run.status === 'running' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/30' :
+                      run.status === 'success' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' :
+                      'bg-red-500/10 text-red-400 border border-red-500/30'
+                    }`}>
+                      {run.status} {run.duration > 0 ? `(${(run.duration).toFixed(2)}s)` : ''}
+                    </span>
+                    <span className="text-white/40 text-[10px] ml-auto group-open:rotate-180 transition-transform">
+                       ▼
+                    </span>
+                  </div>
+                </summary>
 
-                {entry.output && (
-                  <div className="mt-1 p-2 bg-black/50 border border-white/5 rounded-lg text-[10px] text-white/70 overflow-y-auto max-h-40 whitespace-pre-wrap font-mono custom-scrollbar">
-                    {entry.output}
-                  </div>
-                )}
-                
-                {entry.error && (
-                  <div className="mt-1 p-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg text-[10px] font-mono break-all">
-                    {entry.error}
-                  </div>
-                )}
-              </div>
+                <div className="p-3 pt-0 flex flex-col gap-3 group-open:border-t border-white/5 bg-black/20">
+                   {run.entries.map((entry) => (
+                      <div key={entry.id} className="pt-2">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-semibold text-white/80 capitalize text-[11px]">{entry.nodeType.replace('Node', '')}</span>
+                          <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold uppercase ${
+                              entry.status === 'running' ? 'bg-blue-500/10 text-blue-400' :
+                              entry.status === 'success' ? 'bg-emerald-500/10 text-emerald-400' :
+                              'bg-red-500/10 text-red-400'
+                          }`}>
+                             {entry.status} {entry.duration && entry.duration > 0 ? `(${entry.duration.toFixed(2)}s)` : ''}
+                          </span>
+                        </div>
+                        
+                        {entry.output && (
+                          <div className="mt-1 p-2 bg-black/50 border border-white/5 rounded text-[10px] text-white/70 overflow-y-auto max-h-32 whitespace-pre-wrap font-mono custom-scrollbar">
+                            {entry.output}
+                          </div>
+                        )}
+                        
+                        {entry.error && (
+                          <div className="mt-1 p-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded text-[10px] font-mono break-all">
+                            {entry.error}
+                          </div>
+                        )}
+                      </div>
+                   ))}
+                </div>
+              </details>
             ))
           )}
         </div>

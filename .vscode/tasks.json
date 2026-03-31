@@ -1,0 +1,19 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run Node refactoring script",
+			"type": "shell",
+			"command": "node replace_sidebar.js && npx tsc --noEmit",
+			"isBackground": false
+		},
+		{
+			"label": "Run replace_sidebar",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"/Users/akhileshnegi/Desktop/assignment/nextflow/replace_sidebar.js"
+			]
+		}
+	]
+}

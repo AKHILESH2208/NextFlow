@@ -7,7 +7,7 @@
     "postinstall": "prisma generate",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.0.6",
@@ -21,6 +21,7 @@
     "@uppy/dashboard": "^5.1.1",
     "@uppy/react": "^5.2.0",
     "@uppy/transloadit": "^5.5.0",
+    "@uppy/xhr-upload": "^5.2.0",
     "@xyflow/react": "^12.10.1",
     "class-variance-authority": "^0.7.1",
     "cloudinary": "^2.9.0",
