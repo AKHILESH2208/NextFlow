@@ -10,6 +10,7 @@ import { SignInButton, Show, UserButton, useUser } from "@clerk/nextjs";
 
 export default function LandingPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [showMoreTools, setShowMoreTools] = useState(false);
   const { user } = useUser();
   
   const imageScrollRef = useRef<HTMLDivElement>(null);
@@ -95,30 +96,39 @@ export default function LandingPage() {
                     <Brush size={20} strokeWidth={1.5} className="text-[#06b6d4]" />
                     {isSidebarOpen && <span className="font-medium text-sm">Realtime</span>}
                 </Link>
-                <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
-                    <PenTool size={20} strokeWidth={1.5} className="text-[#d946ef]" />
-                    {isSidebarOpen && <span className="font-medium text-sm">Edit</span>}
-                </Link>
-                <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
-                    <Mic size={20} strokeWidth={1.5} />
-                    {isSidebarOpen && <span className="font-medium text-sm">Video Lipsync</span>}
-                </Link>
-                <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
-                    <ScanFace size={20} strokeWidth={1.5} className="text-[#a3e635]" />
-                    {isSidebarOpen && <span className="font-medium text-sm">Motion Transfer</span>}
-                </Link>
-                <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
-                    <Box size={20} strokeWidth={1.5} />
-                    {isSidebarOpen && <span className="font-medium text-sm">3D Objects</span>}
-                </Link>
-                <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
-                    <Film size={20} strokeWidth={1.5} className="text-[#f97316]" />
-                    {isSidebarOpen && <span className="font-medium text-sm">Video Restyle</span>}
-                </Link>
-                <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/40 ${!isSidebarOpen && 'justify-center'}`}>
+
+                {showMoreTools && (
+                  <>
+                    <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
+                        <PenTool size={20} strokeWidth={1.5} className="text-[#d946ef]" />
+                        {isSidebarOpen && <span className="font-medium text-sm">Edit</span>}
+                    </Link>
+                    <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
+                        <Mic size={20} strokeWidth={1.5} />
+                        {isSidebarOpen && <span className="font-medium text-sm">Video Lipsync</span>}
+                    </Link>
+                    <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
+                        <ScanFace size={20} strokeWidth={1.5} className="text-[#a3e635]" />
+                        {isSidebarOpen && <span className="font-medium text-sm">Motion Transfer</span>}
+                    </Link>
+                    <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
+                        <Box size={20} strokeWidth={1.5} />
+                        {isSidebarOpen && <span className="font-medium text-sm">3D Objects</span>}
+                    </Link>
+                    <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
+                        <Film size={20} strokeWidth={1.5} className="text-[#f97316]" />
+                        {isSidebarOpen && <span className="font-medium text-sm">Video Restyle</span>}
+                    </Link>
+                  </>
+                )}
+
+                <button 
+                  onClick={() => setShowMoreTools(!showMoreTools)}
+                  className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/40 ${!isSidebarOpen && 'justify-center'}`}
+                >
                     <MoreHorizontal size={20} strokeWidth={1.5} />
-                    {isSidebarOpen && <span className="font-medium text-sm">Less</span>}
-                </Link>
+                    {isSidebarOpen && <span className="font-medium text-sm">{showMoreTools ? 'Less' : 'More'}</span>}
+                </button>
             </div>
         </div>
 
