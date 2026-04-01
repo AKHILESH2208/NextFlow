@@ -1,3 +1,4 @@
+import Sidebar from "@/components/Sidebar";
 "use client";
 import { useRef, useState } from "react";
 import Link from 'next/link';
@@ -29,137 +30,10 @@ export default function LandingPage() {
   };
 
   return (
+    
     <div className="min-h-screen bg-[#0E0E0E] text-white flex overflow-x-hidden font-sans">
+      <Sidebar onStateChange={setIsSidebarOpen} />
       
-      {/* Advanced Collapsable Sidebar */}
-      <aside 
-        className={`${isSidebarOpen ? 'w-[240px]' : 'w-[68px]'} flex-col justify-between py-4 border-r border-[#222] bg-[#0A0A0A] hidden md:flex z-50 fixed h-full left-0 top-0 transition-all duration-300 overflow-y-auto no-scrollbar`}
-      >
-        <div className="flex flex-col w-full px-3 gap-6">
-            <div className={`flex items-center ${isSidebarOpen ? 'justify-between' : 'justify-center'} px-1 h-8 mt-2`}>
-                {isSidebarOpen ? (
-                   <Link href="/" className="flex items-center gap-2">
-                     <Layers className="w-5 h-5 text-white" />
-                   </Link>
-                ) : (
-                   <Link href="/" className="mb-2">
-                     <Layers className="w-5 h-5 text-white" />
-                   </Link>
-                )}
-                <button 
-                  onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                  className="text-white/50 hover:text-white transition-colors"
-                >
-                  <PanelLeftClose size={20} className={!isSidebarOpen ? "rotate-180" : ""} />
-                </button>
-            </div>
-
-            <nav className="flex flex-col gap-1 mt-2">
-                <Link href="/" className={`flex items-center gap-3 p-2 rounded-xl transition-colors ${isSidebarOpen ? 'bg-white/10 text-white' : 'hover:bg-white/5 text-white/70 justify-center'}`}>
-                    <Home size={20} strokeWidth={1.5} />
-                    {isSidebarOpen && <span className="font-medium text-sm">Home</span>}
-                </Link>
-                <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
-                    <GitMerge size={20} strokeWidth={1.5} />
-                    {isSidebarOpen && <span className="font-medium text-sm">Train Lora</span>}
-                </Link>
-                <Link href="/projects" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
-                    <LayoutGrid size={20} strokeWidth={1.5} />
-                    {isSidebarOpen && <span className="font-medium text-sm">Node Editor</span>}
-                </Link>
-                <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
-                    <FolderOpen size={20} strokeWidth={1.5} />
-                    {isSidebarOpen && <span className="font-medium text-sm">Assets</span>}
-                </Link>
-            </nav>
-
-            <div className="flex flex-col gap-1 mt-4">
-                {isSidebarOpen && <div className="text-white/40 text-xs font-medium px-3 mb-2">Tools</div>}
-                
-                <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
-                    <ImageIcon size={20} strokeWidth={1.5} className="text-[#3b82f6]" />
-                    {isSidebarOpen && <span className="font-medium text-sm">Image</span>}
-                </Link>
-                <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
-                    <MonitorPlay size={20} strokeWidth={1.5} className="text-[#f59e0b]" />
-                    {isSidebarOpen && <span className="font-medium text-sm">Video</span>}
-                </Link>
-                <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
-                    <Wand2 size={20} strokeWidth={1.5} />
-                    {isSidebarOpen && <span className="font-medium text-sm">Enhancer</span>}
-                </Link>
-                <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
-                    <Moon size={20} strokeWidth={1.5} className="text-[#eab308]" />
-                    {isSidebarOpen && <span className="font-medium text-sm text-white/90">Nano Banana</span>}
-                </Link>
-                <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
-                    <Brush size={20} strokeWidth={1.5} className="text-[#06b6d4]" />
-                    {isSidebarOpen && <span className="font-medium text-sm">Realtime</span>}
-                </Link>
-
-                {showMoreTools && (
-                  <>
-                    <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
-                        <PenTool size={20} strokeWidth={1.5} className="text-[#d946ef]" />
-                        {isSidebarOpen && <span className="font-medium text-sm">Edit</span>}
-                    </Link>
-                    <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
-                        <Mic size={20} strokeWidth={1.5} />
-                        {isSidebarOpen && <span className="font-medium text-sm">Video Lipsync</span>}
-                    </Link>
-                    <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
-                        <ScanFace size={20} strokeWidth={1.5} className="text-[#a3e635]" />
-                        {isSidebarOpen && <span className="font-medium text-sm">Motion Transfer</span>}
-                    </Link>
-                    <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
-                        <Box size={20} strokeWidth={1.5} />
-                        {isSidebarOpen && <span className="font-medium text-sm">3D Objects</span>}
-                    </Link>
-                    <Link href="#" className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/70 ${!isSidebarOpen && 'justify-center'}`}>
-                        <Film size={20} strokeWidth={1.5} className="text-[#f97316]" />
-                        {isSidebarOpen && <span className="font-medium text-sm">Video Restyle</span>}
-                    </Link>
-                  </>
-                )}
-
-                <button 
-                  onClick={() => setShowMoreTools(!showMoreTools)}
-                  className={`flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors text-white/40 ${!isSidebarOpen && 'justify-center'}`}
-                >
-                    <MoreHorizontal size={20} strokeWidth={1.5} />
-                    {isSidebarOpen && <span className="font-medium text-sm">{showMoreTools ? 'Less' : 'More'}</span>}
-                </button>
-            </div>
-        </div>
-
-        <div className="flex flex-col w-full px-4 gap-4 mt-8 pb-4 border-t border-white/5 pt-6">
-           {isSidebarOpen && (
-             <div className="flex flex-col gap-3">
-               <span className="text-white/90 text-sm font-medium">Earn 3,000 Credits</span>
-               <button className="w-full bg-gradient-to-r from-[#3b82f6] to-[#4f46e5] hover:opacity-90 text-white rounded-xl py-2.5 text-[15px] font-medium transition-all shadow-[0_0_20px_rgba(59,130,246,0.3)]">
-                 Upgrade
-               </button>
-             </div>
-           )}
-           <div className={`flex items-center gap-3 mt-2 ${!isSidebarOpen && 'justify-center'}`}>
-              <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center shrink-0 border border-white/10 text-white/80 overflow-hidden relative">
-                 {user?.imageUrl ? (
-                   <img src={user.imageUrl} alt="User avatar" className="w-full h-full object-cover" />
-                 ) : (
-                   <User size={18} />
-                 )}
-              </div>
-              {isSidebarOpen && (
-                 <div className="flex flex-col overflow-hidden">
-                    <span className="text-sm font-medium text-white/90 truncate">
-                      {user?.fullName || user?.firstName || user?.primaryEmailAddress?.emailAddress?.split('@')[0] || 'User'}
-                    </span>
-                    <span className="text-xs text-white/50">Free</span>
-                 </div>
-              )}
-           </div>
-        </div>
-      </aside>
 
       <main className={`flex-1 w-full flex flex-col min-h-screen bg-[#0E0E0E] transition-all duration-300 ${isSidebarOpen ? 'md:pl-[240px]' : 'md:pl-[68px]'}`}>
         

@@ -7,8 +7,17 @@ import {
   Layers, Home, GitMerge, FolderOpen, Video, Moon, Brush, PenTool, Mic, ScanFace, Box, Film, MoreHorizontal, PanelLeftClose, Pickaxe, User, LayoutGrid, Image as ImageIcon, Wand2, MonitorPlay
 } from 'lucide-react';
 
-export default function Sidebar() {
+export default function Sidebar({ onStateChange }: { onStateChange?: (isOpen: boolean) => void }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  // When state changes, we can notify parent
+  const toggleSidebar = () => {
+    const newState = !isSidebarOpen;
+    setIsSidebarOpen(newState);
+    if (onStateChange) {
+      onStateChange(newState);
+    }
+  };
   const [showMoreTools, setShowMoreTools] = useState(false);
   const pathname = usePathname();
   const { user } = useUser();
@@ -23,7 +32,7 @@ export default function Sidebar() {
                 <Layers className="w-5 h-5 text-white shrink-0" />
               </Link>
               <button 
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                onClick={toggleSidebar}
                 className="text-white/50 hover:text-white transition-colors flex items-center justify-center w-8 h-8 rounded-lg hover:bg-white/5"
               >
                 <PanelLeftClose size={20} className={`${!isSidebarOpen ? "rotate-180" : ""} shrink-0`} />
