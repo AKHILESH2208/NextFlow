@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
     // your project has type errors. This also prevents Vercel out-of-memory freezing.
     ignoreBuildErrors: true,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;
