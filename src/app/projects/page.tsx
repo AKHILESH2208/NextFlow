@@ -1,6 +1,6 @@
-import Sidebar from "@/components/Sidebar";
 "use client";
 
+import Sidebar from "@/components/Sidebar";
 import { useUser, RedirectToSignIn } from "@clerk/nextjs";
 import { Show, UserButton } from "@clerk/nextjs";
 import { useEffect, useState } from "react";

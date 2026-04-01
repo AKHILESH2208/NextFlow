@@ -1,5 +1,6 @@
-import Sidebar from "@/components/Sidebar";
 "use client";
+
+import Sidebar from "@/components/Sidebar";
 import { useRef, useState } from "react";
 import Link from 'next/link';
 import { 
