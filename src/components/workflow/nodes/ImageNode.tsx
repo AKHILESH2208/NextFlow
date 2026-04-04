@@ -55,29 +55,38 @@ function ImageNode({ id, data }: { id: string; data: any }) {
         </button>
       </div>
       <div className="p-5 flex flex-col gap-4 relative">
-        <label className="nodrag border border-dashed border-white/20 hover:border-white/40 bg-black/20 hover:bg-white/5 rounded-lg h-32 flex flex-col items-center justify-center cursor-pointer transition-colors text-krea-text-muted text-[10px] uppercase font-medium tracking-wide relative overflow-hidden">
+        <div 
+          className="nodrag border border-dashed border-white/20 hover:border-white/40 bg-black/20 hover:bg-white/5 rounded-lg h-32 flex flex-col items-center justify-center transition-colors text-krea-text-muted text-[10px] uppercase font-medium tracking-wide relative overflow-hidden"
+        >
           {data.url ? (
             <>
               <img src={data.url} alt="Uploaded" className="absolute inset-0 w-full h-full object-cover" />
               <button
-                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsOpen(true); }}
-                className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white p-1.5 rounded-md backdrop-blur-md transition-colors opacity-0 group-hover:opacity-100"
+                onClick={(e) => { 
+                  e.preventDefault(); 
+                  e.stopPropagation(); 
+                  uppy.cancelAll();
+                  setIsOpen(true); 
+                }}
+                className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white p-1.5 rounded-md backdrop-blur-md transition-colors opacity-0 group-hover:opacity-100 z-10"
                 title="Replace Image"
               >
                 <RefreshCw size={14} />
               </button>
             </>
           ) : (
-            <>
-              <div 
-                className="w-full h-full flex flex-col items-center justify-center p-4"
-                onClick={(e) => { e.preventDefault(); setIsOpen(true); }}
-              >
-                <span>+ Upload Image</span>
-              </div>
-            </>
+            <div 
+              className="w-full h-full flex flex-col items-center justify-center p-4 cursor-pointer"
+              onClick={(e) => {
+                e.preventDefault();
+                uppy.cancelAll();
+                setIsOpen(true);
+              }}
+            >
+              <span>+ Upload Image</span>
+            </div>
           )}
-        </label>
+        </div>
         {isOpen && mounted && createPortal(
           <div className="fixed inset-0 z-[999999] flex items-center justify-center pointer-events-auto" style={{ zIndex: 999999 }}>
             <div className="absolute inset-0 bg-black/50" onClick={(e) => { e.stopPropagation(); setIsOpen(false); }}></div>
