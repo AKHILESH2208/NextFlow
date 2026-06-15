@@ -60,7 +60,7 @@ Think of it as **Figma + ComfyUI + Zapier** combined — but built for generativ
 ### 📸 Demo
 
 ![NEXTFLOW AI Canvas](https://i.imgur.com/your-screenshot-link-here.gif)  
-*(Add a GIF or video here — this is the most important part)*
+
 
 **Live Demo**: [nextflow-ai.vercel.app](https://nextflow-ai.vercel.app)
 
@@ -93,7 +93,7 @@ MIT License — feel free to use, modify, and learn from it.
 ---
 
 **Made with ❤️ by Akhilesh Negi**  
-B.Tech CSE, Delhi Technological University (DTU) | CF Expert (1664)
+B.Tech CSE, Delhi Technological University (DTU) 
 
 ---
 
