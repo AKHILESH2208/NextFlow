@@ -62,7 +62,7 @@ Think of it as **Figma + ComfyUI + Zapier** combined — but built for generativ
 ![NEXTFLOW AI Canvas](https://i.imgur.com/your-screenshot-link-here.gif)  
 
 
-**Live Demo**: [nextflow-ai.vercel.app]([https://nextflow-ai.vercel.app](https://drive.google.com/file/d/1HNEL3RR0ddCGJYtuHCdXb0cT1iA8SBfA/view?usp=drive_link])
+**Live Demo**: [Demo]([https://drive.google.com/file/d/1HNEL3RR0ddCGJYtuHCdXb0cT1iA8SBfA/view?usp=drive_link])
 
 ---
 
